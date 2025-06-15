@@ -1,0 +1,67 @@
+.carousel img {
+  object-fit: cover;
+  width: 50%;
+  max-height: 60vh;
+  display: block;
+  margin: 60px auto; /* Espacio superior y centrado horizontal */
+}
+
+/* Ajuste responsive */
+@media (max-width: 768px) {
+  .carousel img {
+    width: 90%; /* Hace la imagen más grande en pantallas pequeñas */
+    max-height: 40vh; /* Reduce la altura en móviles */
+  }
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1); /* Invierte el color a negro */
+}
+
+.icon-container {
+  display: flex;            /* Alinea los íconos en fila */
+  gap: 10rem;                /* Espacio entre cada ícono */
+  justify-content: center;  /* Centra horizontalmente */
+  align-items: center;      /* Centra verticalmente */
+  margin: 10rem 0;           /* Margen arriba y abajo */
+}
+
+.icon-container a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.icon-container a:hover {
+  color: #007bff; /* Cambia color al pasar el mouse */
+}
+
+/* Para que el footer quede abajo siempre */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Contenido principal que ocupa el espacio disponible */
+.content-wrap {
+  flex: 3;
+}
+
+
+/* Estilo para los enlaces de los iconos */
+.icon-container a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.icon-container a:hover {
+  color: #0d6efd; /* Azul bootstrap */
+}
