@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GYMPRO Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600&display=swap" rel="stylesheet" />
+
+  </head>
+  <body>
+    <div class="login-container">
+      <!-- Imagen con fondo local y difuminado lateral -->
+      <div
+        class="image-side"
+        style="
+          background-image: linear-gradient(to left, rgba(33,33,33,0) 60%, #212121 100%), url('assets/img/cbum.jpg');
+          background-size: cover;
+          background-position: center 65%;
+          background-repeat: no-repeat;">
+      </div>
+
+      <!-- Formulario -->
+      <div class="form-side">
+        <div class="login-wrapper">
+          <h1 class="login-title">GYMPRO</h1>
+
+          <div class="login-card">
+            <form class="form">
+              <span class="input-span">
+                <label for="user" class="label">Usuario</label>
+                <input type="user" name="user" id="user" />
+              </span>
+
+              <span class="input-span">
+                <label for="password" class="label">Password</label>
+                <input type="password" name="password" id="password" />
+              </span>
+
+              <div
+                aria-label="User Login Button"
+                tabindex="0"
+                role="button"
+                class="user-profile"
+                (click)="goToHome()"
+              >
+                <div class="user-profile-inner">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
+                  </svg>
+                  <p>Log In</p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

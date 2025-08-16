@@ -1,67 +1,114 @@
-.carousel img {
-  object-fit: cover;
-  width: 50%;
-  max-height: 60vh;
-  display: block;
-  margin: 60px auto; /* Espacio superior y centrado horizontal */
-}
-
-/* Ajuste responsive */
-@media (max-width: 768px) {
-  .carousel img {
-    width: 90%; /* Hace la imagen más grande en pantallas pequeñas */
-    max-height: 40vh; /* Reduce la altura en móviles */
-  }
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  filter: invert(1); /* Invierte el color a negro */
-}
-
-.icon-container {
-  display: flex;            /* Alinea los íconos en fila */
-  gap: 10rem;                /* Espacio entre cada ícono */
-  justify-content: center;  /* Centra horizontalmente */
-  align-items: center;      /* Centra verticalmente */
-  margin: 10rem 0;           /* Margen arriba y abajo */
-}
-
-.icon-container a {
-  color: #333;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.icon-container a:hover {
-  color: #007bff; /* Cambia color al pasar el mouse */
-}
-
-/* Para que el footer quede abajo siempre */
+/* General */
 html, body {
   height: 100%;
   margin: 0;
+  font-family: sans-serif;
+  background-color: rgb(33, 33, 33);
+
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: rgb(33, 33, 33);
+
 }
 
-/* Contenido principal que ocupa el espacio disponible */
+.bg-dark-custom {
+  background-color: rgb(41, 41, 41) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+
 .content-wrap {
   flex: 3;
 }
 
 
-/* Estilo para los enlaces de los iconos */
+/* Icon container layout */
+.icon-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rem;
+  justify-content: center;
+  align-items: center;
+  margin: 10rem 0;
+}
+
 .icon-container a {
-  color: #333;
+  text-align: center;
   text-decoration: none;
+  color: #ffffff;
   transition: color 0.3s ease;
+  width: 150px;
 }
 
 .icon-container a:hover {
-  color: #0d6efd; /* Azul bootstrap */
+  color: #069b06;
+}
+
+/* Icon and text */
+.icon-container i {
+  transition: transform 0.3s ease;
+  display: inline-block;
+  font-size: 8rem;
+}
+
+.icon-container i:hover {
+  transform: scale(1.1);
+}
+
+.icon-container p {
+  font-size: 2.2rem;
+  font-style: normal;
+  margin-top: 0.5rem;
+}
+
+/* Footer behavior */
+footer {
+  margin-top: auto;
+  background-color: rgb(36, 36, 36);
+
+}
+.footer-dark {
+  background-color: rgb(41, 41, 41);
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .icon-container {
+    gap: 3rem;
+    margin: 4rem 1rem;
+  }
+
+  .icon-container a {
+    width: 40%;
+  }
+
+  .icon-container i {
+    font-size: 5rem !important;
+  }
+
+  .icon-container p {
+    font-size: 1.4rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .icon-container a {
+    width: 80%;
+  }
+
+  .icon-container i {
+    font-size: 4rem !important;
+  }
+
+  .icon-container p {
+    font-size: 1.2rem !important;
+  }
 }
