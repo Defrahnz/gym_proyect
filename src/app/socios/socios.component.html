@@ -1,1 +1,283 @@
-<p>socios works!</p>
+<div class="container mt-4">
+  <h1>Socios</h1>
+  <h2 class="mb-4">Visualizar a los socios</h2>
+
+  <div class="d-flex justify-content-end gap-2 mb-3">
+    <button class="Btn" (click)="openNuevoSocioModal()" data-bs-toggle="tooltip" data-bs-placement="top"
+      title="Agregar socio">
+      <div class="sign">+</div>
+      <div class="text">Socio</div>
+    </button>
+    <button class="btn btn-secondary" (click)="abrirModalDeshabilitados()">Socios deshabilitados</button>
+  </div>
+
+  <div class="row mb-4">
+  <div class="col-auto">
+    <div class="input-group" style="width: 300px;">
+      <span class="input-group-text bg-white">
+        <i class="bi bi-search"></i>
+      </span>
+      <input type="text"
+             class="form-control"
+             placeholder="Buscar socio"
+             [(ngModel)]="terminoBusqueda"
+             (ngModelChange)="onBusquedaChange($event)" />
+    </div>
+  </div>
+</div>
+
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>ID Socio</th>
+          <th>Nombre(s)</th>
+          <th>Apellido Paterno</th>
+          <th>Apellido Materno</th>
+          <th>Email</th>
+          <th>Fecha Pago</th>
+          <th>Al Corriente</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let socio of socios">
+          <td>{{socio.socioID}}</td>
+          <td>{{socio.nombre}}</td>
+          <td>{{socio.apellidoPaterno}}</td>
+          <td>{{socio.apellidoMaterno}}</td>
+          <td>{{socio.email}}</td>
+          <td>{{socio.fechaPago | date}}</td>
+          <td>{{socio.alCorriente ? 'Sí' : 'No'}}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger me-2" (click)="abrirModalConfirmar(socio)"
+              title="Deshabilitar"><i class="bi bi-eye-slash fs-4"></i></button>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="abrirModalEditar(socio)" title="Editar"><i
+                class="bi bi-pencil fs-4"></i></button>
+            <button class="btn btn-sm btn-outline-info" (click)="abrirModalFoto(socio)" title="Ver foto">
+              <i class="bi bi-image fs-4"></i>
+            </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Bootstrap Nuevo Socio-->
+<div *ngIf="modalVisible" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #formNuevo="ngForm" (ngSubmit)="guardarNuevoSocio()">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo Socio</h5>
+          <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="nuevoSocio.nombre" required
+              #nombre="ngModel" [class.is-invalid]="formNuevo.submitted && nombre.invalid">
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno"
+              [(ngModel)]="nuevoSocio.apellidoPaterno" required #apellidoPaterno="ngModel"
+              [class.is-invalid]="formNuevo.submitted && apellidoPaterno.invalid">
+            <div class="invalid-feedback">El apellido paterno es obligatorio.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="apellidoMaterno" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno"
+              [(ngModel)]="nuevoSocio.apellidoMaterno" required #apellidoMaterno="ngModel"
+              [class.is-invalid]="formNuevo.submitted && apellidoMaterno.invalid">
+            <div class="invalid-feedback">El apellido materno es obligatorio.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="apellidoMaterno" name="email" [(ngModel)]="nuevoSocio.email"
+              required #email="ngModel" [class.is-invalid]="formNuevo.submitted && email.invalid">
+            <div class="invalid-feedback">El email es obligatorio.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="fotoUrl" class="form-label">Foto del socio</label>
+            <input type="file" class="form-control" id="foto" name="foto" (change)="onFotoSeleccionada($event)" required
+              #fotoInput="ngModel" ngModel [class.is-invalid]="formNuevo.submitted && !fotoSeleccionada">
+            <div class="invalid-feedback" *ngIf="formNuevo.submitted && !fotoSeleccionada">
+              La foto es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!formNuevo.valid || !fotoSeleccionada">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Boton deshabilitar-->
+
+<div *ngIf="modalConfirmarVisible" class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar deshabilitación</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalConfirmar()"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro que deseas deshabilitar al socio <strong>{{socioSeleccionado?.nombre}}
+            {{socioSeleccionado?.apellidoPaterno}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalConfirmar()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmarDeshabilitar()">Deshabilitar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Boton ver deshabilitados -->
+
+<div *ngIf="modalDeshabilitadosVisible" class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Socios deshabilitados</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalDeshabilitados()"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido Paterno</th>
+              <th>Fecha Baja</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let socio of sociosDeshabilitados">
+              <td>{{socio.socioID}}</td>
+              <td>{{socio.nombre}}</td>
+              <td>{{socio.apellidoPaterno}}</td>
+              <td>{{socio.fechaBaja | date}}</td>
+              <td>
+                <button class="btn btn-sm btn-success" (click)="abrirConfirmarHabilitar(socio)">Habilitar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalDeshabilitados()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmacion para habilitar de nuevo -->
+
+<div *ngIf="modalConfirmarHabilitarVisible" class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar habilitación</h5>
+        <button type="button" class="btn-close" (click)="cerrarConfirmarHabilitar()"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro que deseas habilitar al socio <strong>{{socioAReactivar?.nombre}}
+            {{socioAReactivar?.apellidoPaterno}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarConfirmarHabilitar()">Cancelar</button>
+        <button class="btn btn-success" (click)="confirmarHabilitar()">Habilitar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Editar Socio -->
+
+<div class="modal fade show d-block" *ngIf="modalEditarVisible" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow rounded">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Editar socio</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEditar()"
+          aria-label="Cerrar"></button>
+      </div>
+
+      <form *ngIf="socioEditado" #formEditar="ngForm">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="socioEditado.nombre"
+                  placeholder="Nombre" required>
+                <label for="nombre">Nombre</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno"
+                  [(ngModel)]="socioEditado.apellidoPaterno" placeholder="Apellido paterno">
+                <label for="apellidoPaterno">Apellido paterno</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno"
+                  [(ngModel)]="socioEditado.apellidoMaterno" placeholder="Apellido materno">
+                <label for="apellidoMaterno">Apellido materno</label>
+              </div>
+            </div>
+
+            <!-- Agrega más campos aquí si lo necesitas -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cerrarModalEditar()">Cancelar</button>
+          <button type="submit" class="btn btn-success" [disabled]="!formEditar.valid"
+            (click)="confirmarEditar()">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Ver foto -->
+
+<div *ngIf="modalFotoVisible" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.7);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Foto de {{socioConFoto?.nombre}}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModalFoto()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img [src]="'https://localhost:7140' + socioConFoto?.fotoUrl" alt="Foto del socio"
+          class="img-fluid rounded shadow" style="max-height: 600px;">
+      </div>
+    </div>
+  </div>
+</div>
