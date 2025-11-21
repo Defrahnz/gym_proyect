@@ -1,1 +1,159 @@
-<p>pagos works!</p>
+<!-- Navbar principal -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold">Pagos</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+      aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú global -->
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/socios']">Socios</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/estadisticas']">Estadísticas</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/personal']">Personal</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/inventario']">Inventario</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenedor principal -->
+<div class="container mt-4 pagos-container">
+  <div class="card shadow-lg border-0 rounded-3">
+    <div class="card-body">
+      <h2 class="mb-4 text-secondary fw-bold">Gestión de pagos</h2>
+
+      <!-- Buscador -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-4 col-sm-6">
+          <div class="input-group">
+            <span class="input-group-text bg-white">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Buscar socio" [(ngModel)]="terminoBusqueda"
+              (ngModelChange)="onBusquedaChange($event)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido Paterno</th>
+              <th>Apellido Materno</th>
+              <th>Email</th>
+              <th>Fecha Pago</th>
+              <th>Al Corriente</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let socio of socios">
+              <td>{{socio.socioID}}</td>
+              <td>{{socio.nombre}}</td>
+              <td>{{socio.apellidoPaterno}}</td>
+              <td>{{socio.apellidoMaterno}}</td>
+              <td>{{socio.email}}</td>
+              <td>{{socio.fechaPago | date:'dd/MM/yyyy'}}</td>
+
+              <td>
+                <span class="badge" [ngClass]="socio.alCorriente ? 'bg-success' : 'bg-danger'">
+                  {{ socio.alCorriente ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-outline-success pago-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                  title="Hacer pago" (click)="abrirModalPagos(socio)">
+                  <i class="bi bi-cash-coin pago-icon"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Pagos -->
+<div *ngIf="modalPagosVisible" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow rounded">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Pagos de {{socioConPagos?.nombre}}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModalPagos()"
+          aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Último pago -->
+        <p *ngIf="ultimoPago">Último pago: {{ultimoPago.fechaPago | date}} - ${{ultimoPago.monto}} -
+          {{ultimoPago.metodoPago}}</p>
+
+        <!-- Formulario de nuevo pago -->
+        <form #formPago="ngForm">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="date" class="form-control" id="fechaPago" name="fechaPago"
+                  [(ngModel)]="nuevoPago.fechaPago" [max]="hoy" required>
+                <label for="fechaPago">Fecha de pago</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="monto" name="monto" [(ngModel)]="nuevoPago.monto"
+                  placeholder="Monto" required>
+                <label for="monto">Monto</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <select class="form-select" id="metodo" name="metodo" [(ngModel)]="nuevoPago.metodoPago" required>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Tarjeta">Tarjeta</option>
+                  <option value="Transferencia">Transferencia</option>
+                </select>
+                <label for="metodo">Método de pago</label>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Historial de pagos -->
+        <h6 class="mt-4">Historial de pagos</h6>
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Método</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pago of historialPagos">
+              <td>{{pago.fechaPago | date}}</td>
+              <td>${{pago.monto}}</td>
+              <td>{{pago.metodoPago}}</td>
+              <td>
+                <span class="badge" [ngClass]="pago.alCorriente ? 'bg-success' : 'bg-danger'">
+                  {{ pago.alCorriente ? 'Al corriente' : 'Atrasado' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalPagos()">Cerrar</button>
+        <button class="btn btn-success" [disabled]="!formPago.valid" (click)="confirmarPago()">Confirmar pago</button>
+      </div>
+    </div>
+  </div>
+</div>

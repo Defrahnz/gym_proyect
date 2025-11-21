@@ -7,9 +7,9 @@
   }
 
   h2 {
-    font-size: 18px;
-    color: gray;
-    margin-bottom: 16px;
+    font-size: 22px;
+  font-weight: 700;
+  color: #495057;
   }
 
   .acciones-superiores {
@@ -90,4 +90,16 @@
 /* button click effect*/
 .Btn:active {
   transform: translate(2px ,2px);
+}
+
+@media (max-width: 768px) {
+  .row.mb-4.align-items-center {
+    flex-direction: column;
+    text-align: center;
+  }
+  .row.mb-4.align-items-center .col-md-4,
+  .row.mb-4.align-items-center .col-md-8 {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }

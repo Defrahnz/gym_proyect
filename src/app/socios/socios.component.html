@@ -1,72 +1,109 @@
-<div class="container mt-4">
-  <h1>Socios</h1>
-  <h2 class="mb-4">Visualizar a los socios</h2>
-
-  <div class="d-flex justify-content-end gap-2 mb-3">
-    <button class="Btn" (click)="openNuevoSocioModal()" data-bs-toggle="tooltip" data-bs-placement="top"
-      title="Agregar socio">
-      <div class="sign">+</div>
-      <div class="text">Socio</div>
+<!-- Navbar principal -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold">Socios</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+      aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <button class="btn btn-secondary" (click)="abrirModalDeshabilitados()">Socios deshabilitados</button>
-  </div>
 
-  <div class="row mb-4">
-  <div class="col-auto">
-    <div class="input-group" style="width: 300px;">
-      <span class="input-group-text bg-white">
-        <i class="bi bi-search"></i>
-      </span>
-      <input type="text"
-             class="form-control"
-             placeholder="Buscar socio"
-             [(ngModel)]="terminoBusqueda"
-             (ngModelChange)="onBusquedaChange($event)" />
+    <!-- Menú global -->
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/pagos']">Pagos</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/estadisticas']">Estadisticas</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/personal']">Personal</a></li>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/inventario']">Inventario</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenedor principal -->
+<div class="container mt-4 socios-container">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="mb-4 text-secondary">Visualizar socios</h2>
+
+      <!-- Bloque superior: buscador + botones -->
+      <div class="row mb-4 align-items-center g-2">
+        <!-- Buscador -->
+        <div class="col-12 col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Buscar socio" [(ngModel)]="terminoBusqueda"
+              (ngModelChange)="onBusquedaChange($event)" />
+          </div>
+        </div>
+
+        <!-- Botones alineados entre sí -->
+        <div class="col-12 col-md-8">
+          <div class="d-flex justify-content-md-end justify-content-start gap-2">
+            <button class="Btn" (click)="openNuevoSocioModal()" title="Agregar socio">
+              <div class="sign">+</div>
+              <div class="text">Socio</div>
+            </button>
+            <button class="btn btn-secondary" (click)="abrirModalDeshabilitados()">Socios deshabilitados</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido Paterno</th>
+              <th>Apellido Materno</th>
+              <th>Email</th>
+              <th>Al Corriente</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let socio of socios">
+              <td>{{socio.socioID}}</td>
+              <td>{{socio.nombre}}</td>
+              <td>{{socio.apellidoPaterno}}</td>
+              <td>{{socio.apellidoMaterno}}</td>
+              <td>{{socio.email}}</td>
+              <td>
+                <span class="badge" [ngClass]="socio.alCorriente ? 'bg-success' : 'bg-danger'">
+                  {{ socio.alCorriente ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex gap-2 justify-content-center">
+                  <button class="btn btn-sm btn-outline-danger" title="Deshabilitar socio" data-bs-toggle="tooltip"
+                    data-bs-placement="top" (click)="abrirModalConfirmar(socio)">
+                    <i class="bi bi-eye-slash fs-5"></i>
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-primary" title="Editar socio" data-bs-toggle="tooltip"
+                    data-bs-placement="top" (click)="abrirModalEditar(socio)">
+                    <i class="bi bi-pencil fs-5"></i>
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-info" title="Ver foto del socio" data-bs-toggle="tooltip"
+                    data-bs-placement="top" (click)="abrirModalFoto(socio)">
+                    <i class="bi bi-image fs-5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table-light">
-        <tr>
-          <th>ID Socio</th>
-          <th>Nombre(s)</th>
-          <th>Apellido Paterno</th>
-          <th>Apellido Materno</th>
-          <th>Email</th>
-          <th>Fecha Pago</th>
-          <th>Al Corriente</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let socio of socios">
-          <td>{{socio.socioID}}</td>
-          <td>{{socio.nombre}}</td>
-          <td>{{socio.apellidoPaterno}}</td>
-          <td>{{socio.apellidoMaterno}}</td>
-          <td>{{socio.email}}</td>
-          <td>{{socio.fechaPago | date}}</td>
-          <td>{{socio.alCorriente ? 'Sí' : 'No'}}</td>
-          <td>
-            <button class="btn btn-sm btn-outline-danger me-2" (click)="abrirModalConfirmar(socio)"
-              title="Deshabilitar"><i class="bi bi-eye-slash fs-4"></i></button>
-            <button class="btn btn-sm btn-outline-primary me-2" (click)="abrirModalEditar(socio)" title="Editar"><i
-                class="bi bi-pencil fs-4"></i></button>
-            <button class="btn btn-sm btn-outline-info" (click)="abrirModalFoto(socio)" title="Ver foto">
-              <i class="bi bi-image fs-4"></i>
-            </button>
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Modal Bootstrap Nuevo Socio-->
+<!-- Modal Nuevo Socio-->
 <div *ngIf="modalVisible" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -248,6 +285,14 @@
                 <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno"
                   [(ngModel)]="socioEditado.apellidoMaterno" placeholder="Apellido materno">
                 <label for="apellidoMaterno">Apellido materno</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="email" name="email"
+                  [(ngModel)]="socioEditado.email" placeholder="Email">
+                <label for="email">Email</label>
               </div>
             </div>
 

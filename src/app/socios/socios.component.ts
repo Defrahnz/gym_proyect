@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app.module';
 import { debounceTime, Subject } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 export interface Socio {
   socioID: number;
@@ -25,6 +26,7 @@ export interface Socio {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule
   ],
   templateUrl: './socios.component.html',
   styleUrls: ['./socios.component.css']
